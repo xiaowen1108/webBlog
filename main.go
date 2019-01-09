@@ -8,22 +8,27 @@ import (
 	"webBlog/controller/admin"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/sessions"
+	"fmt"
+	"net/http"
+	"github.com/jinzhu/gorm"
+	"crypto/sha256"
 )
 var appConfigFile, dbConfigFile string
-
+var appConf,dbConf *goconfig.ConfigFile
 func main() {
 	//config file
 	flag.StringVar(&appConfigFile, "app_conf_file", "config/app.ini", "web app config file")
 	flag.StringVar(&dbConfigFile,"db_conf_file", "config/db.ini", "web db config file")
 	flag.Parse()
 	//read app.ini
-	appConf, err := goconfig.LoadConfigFile(appConfigFile)
+	var err error
+	appConf, err = goconfig.LoadConfigFile(appConfigFile)
 	checkErr(err)
 	//read db.ini
-	dbConf, err := goconfig.LoadConfigFile(dbConfigFile)
+	dbConf, err = goconfig.LoadConfigFile(dbConfigFile)
 	checkErr(err)
 	//read db select
-	dbName, err := appConf.GetValue("", "db")
+	dbName, err := appConf.GetValue("app", "db")
 	checkErr(err)
 	//read db config
 	dbConfig, err := dbConf.GetSection(dbName)
@@ -32,20 +37,26 @@ func main() {
 	DB, err := model.InitDB(dbName, dbConfig)
 	checkErr(err)
 	defer DB.Close()
+	//init user
+	createAdminUser(DB)
 	//gin start
-	ginMode, err := appConf.GetValue("", "runMode")
+	ginMode, err := appConf.GetValue("app", "runMode")
 	checkErr(err)
 	gin.SetMode(ginMode)
 	router := gin.Default()
 	//session
-	store := cookie.NewStore([]byte("secret"))
+	secret, err := appConf.GetValue("app", "secret")
+	checkErr(err)
+	store := cookie.NewStore([]byte(secret))
 	store.Options(sessions.Options{HttpOnly: true, MaxAge: 7 * 86400, Path: "/"}) //Also set Secure: true if using SSL, you should though
-	router.Use(sessions.Sessions("webBlog", store))
+	sessionName, err := appConf.GetValue("app", "sessionName")
+	checkErr(err)
+	router.Use(sessions.Sessions(sessionName, store))
 	//static
 	router.Static("/static", "./static")
 	//setRoute
 	setRoute(router)
-	runPort, err := appConf.GetValue("", "runPort")
+	runPort, err := appConf.GetValue("app", "runPort")
 	checkErr(err)
 	//setView
 	router.LoadHTMLGlob("./view/***/**/*")
@@ -59,11 +70,6 @@ func checkErr(err error) {
 }
 
 func setRoute(r *gin.Engine){
-	r.GET("session", func(context *gin.Context) {
-		session := sessions.Default(context)
-		session.AddFlash("输入错误", "errMsg4")
-		session.Save()
-	})
 	adminR := r.Group("/admin")
 	adminR.Use(checkAdminLogin())
 	{
@@ -100,5 +106,39 @@ func setRoute(r *gin.Engine){
 
 func checkAdminLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Println(c.Request.URL)
+		url := c.Request.URL.Path
+		if url == "/admin/login" || url == "/admin/code" {
+			c.Next()
+		} else {
+			session := sessions.Default(c)
+			userInfo := session.Get("userInfo")
+			if userInfo == nil {
+				c.Redirect(http.StatusMovedPermanently, "/admin/login")
+			} else {
+				c.Next()
+			}
+		}
 	}
+}
+
+func createAdminUser(DB *gorm.DB) {
+	var adminUser model.AdminUser
+
+	if DB.First(&adminUser).RecordNotFound() {
+		//创建用户
+		username, err := appConf.GetValue("account", "username")
+		checkErr(err)
+		password, err := appConf.GetValue("account", "password")
+		checkErr(err)
+		adminUser.Name = username
+		adminUser.Nickname = username
+		h := sha256.New()
+		h.Write([]byte(password))
+		secret, err := appConf.GetValue("app", "secret")
+		checkErr(err)
+		adminUser.Pwd = fmt.Sprintf("%x", h.Sum([]byte(secret)))
+		DB.Create(&adminUser)
+	}
+
 }
