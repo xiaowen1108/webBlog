@@ -1,0 +1,36 @@
+{{define "admin/login/login.html"}}
+{{template "admin/layout/header.html"}}
+<body style="background:#F3F3F4;">
+<div class="login_box">
+    <h1>Blog</h1>
+    <h2>欢迎使用博客管理平台</h2>
+<div class="form">
+    {{if .errorMsg}}
+    <p style="color:red">{{.errorMsg}}</p>
+    {{end}}
+<form action="" method="post">
+<ul>
+    <li>
+        <input type="text" name="name" class="text"/>
+        <span><i class="fa fa-user"></i></span>
+    </li>
+    <li>
+        <input type="password" name="pwd" class="text"/>
+        <span><i class="fa fa-lock"></i></span>
+    </li>
+<li>
+    <input type="text" class="code" name="code"/>
+    <span><i class="fa fa-check-square-o"></i></span>
+        <img src="/admin/code" alt="" onclick="this.src='/admin/code?'+Math.random()">
+</li>
+    <li>
+        <input type="submit" value="立即登陆"/>
+    </li>
+</ul>
+</form>
+    <p>&copy; 2018 Powered by <a href="http://www.az1314.cn" target="_blank">小文博客</a></p>
+</div>
+</div>
+</body>
+{{template "admin/layout/footer.html"}}
+{{end}}
