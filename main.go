@@ -59,10 +59,17 @@ func checkErr(err error) {
 }
 
 func setRoute(r *gin.Engine){
+	r.GET("session", func(context *gin.Context) {
+		session := sessions.Default(context)
+		session.AddFlash("输入错误", "errMsg4")
+		session.Save()
+	})
 	adminR := r.Group("/admin")
 	adminR.Use(checkAdminLogin())
 	{
 		adminR.GET("/login", admin.Login{}.Login)
+		adminR.POST("/login", admin.Login{}.Login)
+		adminR.GET("/code", admin.Login{}.Code)
 				//'login', 'LoginController@login');
 				//Route::get('code', 'LoginController@code');
 				//});
