@@ -96,3 +96,7 @@ func (i Index) Pass (c *gin.Context)  {
 		}
 	}
 }
+
+func (i Index) Recom (c *gin.Context){
+
+}
