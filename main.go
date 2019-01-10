@@ -65,7 +65,8 @@ func setRoute(r *gin.Engine){
 		adminR.GET("/index", admin.Index{}.Index)
 		adminR.GET("/", admin.Index{}.Index)
 		adminR.GET("/info", admin.Index{}.Info)
-				//Route::any('pass', 'IndexController@pass');
+		adminR.GET("/pass", admin.Index{}.Pass)
+		adminR.POST("/pass", admin.Index{}.Pass)
 				//Route::post('category/changeorder', 'CategoryController@changeorder');
 				//Route::resource('category', 'CategoryController');
 				//Route::post('article/changeorder', 'ArticleController@changeorder');
