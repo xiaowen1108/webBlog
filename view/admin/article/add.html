@@ -103,12 +103,13 @@ $(function() {
 $('#file_upload').uploadify({
     'buttonText' : '上传图片',
     'swf'      : "/static/common/uploadify/uploadify.swf",
-    'uploader' : "",
+    'uploader' : "/admin/upload",
+    'fileObjName':"editormd-image-file",
     'onUploadSuccess' : function(file, data, response) {
         data = $.parseJSON(data);
-        if(data.status){
-            $('input[name=cover]').val(data.info);
-            $('#artical_cover').attr('src',data.info);
+        if(data.success == 1){
+            $('input[name=cover]').val(data.url);
+            $('#artical_cover').attr('src',data.url);
         }
     }
 });
