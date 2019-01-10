@@ -59,53 +59,61 @@ func setRoute(r *gin.Engine){
 	//adminR.Use(checkAdminLogin([]string{"/admin/login", "/admin/code"}))
 	{
 		//登录
-		adminR.GET("/login", admin.Login{}.Login)
-		adminR.POST("/login", admin.Login{}.Login)
-		adminR.GET("/layout", admin.Login{}.Logout)
-		adminR.GET("/code", admin.Login{}.Code)
+		loginController := &admin.Login{}
+		adminR.GET("/login", loginController.Login)
+		adminR.POST("/login", loginController.Login)
+		adminR.GET("/layout", loginController.Logout)
+		adminR.GET("/code", loginController.Code)
 		//首页
-		adminR.GET("/index", admin.Index{}.Index)
-		adminR.GET("/", admin.Index{}.Index)
-		adminR.GET("/info", admin.Index{}.Info)
-		adminR.GET("/pass", admin.Index{}.Pass)
-		adminR.POST("/pass", admin.Index{}.Pass)
-		adminR.POST("/recom", admin.Index{}.Recom)
+		indexController := &admin.Index{}
+		adminR.GET("/index", indexController.Index)
+		adminR.GET("/", indexController.Index)
+		adminR.GET("/info", indexController.Info)
+		adminR.GET("/pass", indexController.Pass)
+		adminR.POST("/pass", indexController.Pass)
+		adminR.POST("/recom", indexController.Recom)
 		//分类
-		adminR.GET("/category/index", admin.Category{}.Index)
-		adminR.GET("/category/add", admin.Category{}.Add)
-		adminR.POST("/category/edit/:id", admin.Category{}.Edit)
-		adminR.GET("/category/del/:id", admin.Category{}.Del)
-		adminR.POST("/category/changeorder/:id", admin.Category{}.ChangeOrder)
+		categoryController := &admin.Category{}
+		adminR.GET("/category/index", categoryController.Index)
+		adminR.GET("/category/add", categoryController.Add)
+		adminR.POST("/category/edit/:id", categoryController.Edit)
+		adminR.GET("/category/del/:id", categoryController.Del)
+		adminR.POST("/category/changeorder/:id", categoryController.ChangeOrder)
 		//文章
-		adminR.GET("/article/index", admin.Article{}.Index)
-		adminR.GET("/article/add", admin.Article{}.Add)
-		adminR.POST("/article/edit/:id", admin.Article{}.Edit)
-		adminR.GET("/article/del/:id", admin.Article{}.Del)
-		adminR.POST("/article/changeorder/:id", admin.Article{}.ChangeOrder)
-		adminR.POST("/article/set_recom/:id", admin.Article{}.SetRecom)
-		adminR.GET("/article/recom", admin.Article{}.Recom)
+		articleController := &admin.Article{}
+		adminR.GET("/article/index", articleController.Index)
+		adminR.GET("/article/add", articleController.Add)
+		adminR.POST("/article/edit/:id", articleController.Edit)
+		adminR.GET("/article/del/:id", articleController.Del)
+		adminR.POST("/article/changeorder/:id", articleController.ChangeOrder)
+		adminR.POST("/article/set_recom/:id", articleController.SetRecom)
+		adminR.GET("/article/recom", articleController.Recom)
 		//base
-		adminR.POST("/upload", admin.Base{}.Upload)
+		baseController := &admin.Base{}
+		adminR.POST("/upload", baseController.Upload)
 		//友情链接
-		adminR.GET("/links/index", admin.Link{}.Index)
-		adminR.GET("/links/add", admin.Link{}.Add)
-		adminR.POST("/links/edit/:id", admin.Link{}.Edit)
-		adminR.GET("/links/del/:id", admin.Link{}.Del)
-		adminR.POST("/links/changeorder", admin.Link{}.ChangeOrder)
+		linkController := &admin.Link{}
+		adminR.GET("/links/index", linkController.Index)
+		adminR.GET("/links/add", linkController.Add)
+		adminR.POST("/links/edit/:id", linkController.Edit)
+		adminR.GET("/links/del/:id", linkController.Del)
+		adminR.POST("/links/changeorder", linkController.ChangeOrder)
 		//导航
-		adminR.GET("/navs/index", admin.Nav{}.Index)
-		adminR.GET("/navs/add", admin.Nav{}.Add)
-		adminR.POST("/navs/edit/:id", admin.Nav{}.Edit)
-		adminR.GET("/navs/del/:id", admin.Nav{}.Del)
-		adminR.POST("/navs/changeorder", admin.Nav{}.ChangeOrder)
+		navController := &admin.Link{}
+		adminR.GET("/navs/index", navController.Index)
+		adminR.GET("/navs/add", navController.Add)
+		adminR.POST("/navs/edit/:id", navController.Edit)
+		adminR.GET("/navs/del/:id", navController.Del)
+		adminR.POST("/navs/changeorder", navController.ChangeOrder)
 		//设置
-		adminR.GET("/config/index", admin.Config{}.Index)
-		adminR.GET("/config/add", admin.Config{}.Add)
-		adminR.POST("/config/edit/:id", admin.Config{}.Edit)
-		adminR.GET("/config/del/:id", admin.Config{}.Del)
-		adminR.POST("/config/changeorder", admin.Config{}.ChangeOrder)
-		adminR.GET("/config/putfile", admin.Config{}.PutFile)
-		adminR.POST("/config/changecontent", admin.Config{}.ChangeContent)
+		confController := &admin.Config{}
+		adminR.GET("/config/index", confController.Index)
+		adminR.GET("/config/add", confController.Add)
+		adminR.POST("/config/edit/:id", confController.Edit)
+		adminR.GET("/config/del/:id", confController.Del)
+		adminR.POST("/config/changeorder", confController.ChangeOrder)
+		adminR.GET("/config/putfile", confController.PutFile)
+		adminR.POST("/config/changecontent", confController.ChangeContent)
 	}
 }
 

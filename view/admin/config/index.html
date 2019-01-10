@@ -1,5 +1,105 @@
 {{define "admin/config/index.html"}}
 {{template "admin/layout/header.html"}}
+<!--面包屑配置项 开始-->
+<div class="crumb_warp">
+    <!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->
+    <i class="fa fa-home"></i> <a href="{{"/admin/info"|url}}">首页</a> &raquo; 配置项管理
+</div>
+<!--面包屑配置项 结束-->
+
+<!--搜索结果页面 列表 开始-->
+<div class="result_wrap">
+<div class="result_title">
+    <h3>配置项列表</h3>
+    {{if .errorMsg}}
+        <div class="mark">
+            <p>{{.errorMsg}}</p>
+        </div>
+    {{end}}
+</div>
+    <!--快捷配置项 开始-->
+<div class="result_content">
+<div class="short_wrap">
+        <a href=""><i class="fa fa-plus"></i>添加配置项</a>
+        <a href=""><i class="fa fa-refresh"></i>更新排序</a>
+</div>
+</div>
+    <!--快捷配置项 结束-->
+</div>
+
+<div class="result_wrap">
+<div class="result_content">
+        <form action="" method="post">
+<table class="list_tab">
+    <tr>
+        <th class="tc" width="5%">排序</th>
+        <th class="tc" width="5%">ID</th>
+        <th>标题</th>
+        <th>名称</th>
+        <th>内容</th>
+        <th>操作</th>
+    </tr>
+
+    @foreach($data as $v)
+<tr>
+<td class="tc">
+        <input type="text" onchange="sort(this,)" value="">
+</td>
+<td class="tc"></td>
+<td>
+
+</td>
+<td></td>
+<td>
+        <input type="hidden" name="id[]" value="">
+</td>
+<td>
+        <a href="">修改</a>
+        <a href="javascript:;" onclick="del()">删除</a>
+</td>
+</tr>
+</table>
+    <div class="btn_group">
+        <input type="submit" value="提交">
+        <input type="button" class="back" onclick="history.go(-1)" value="返回" >
+    </div>
+</form>
+</div>
+</div>
+<!--搜索结果页面 列表 结束-->
+
+<script>
+function sort(obj,id){
+    var sort = $(obj).val();
+$.post("{{"admin/config/changeorder"|url}}",{'id':id,'sort':sort},function(data){
+if(data.status){
+    layer.msg(data.info, {icon: 6});
+}else{
+layer.msg(data.info, {icon: 5});
+}
+});
+}
+function del(id) {
+layer.confirm('确定要删除这个配置项吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+$.post("/" + id, {}, function (data) {
+if (data.status == 1) {
+    layer.msg(data.info, {icon: 6});
+    setInterval(function () {
+        window.location.reload();
+    }, 2000);
+} else {
+    layer.msg(data.info, {icon: 5});
+}
+});
+})
+}
+
+
+
+
+</script>
 
 {{template "admin/layout/footer.html"}}
 {{end}}

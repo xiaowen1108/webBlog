@@ -12,7 +12,6 @@ import (
 )
 
 type Login struct {
-	*Base
 }
 
 type LoginData struct {
@@ -21,7 +20,7 @@ type LoginData struct {
 	Cacode string `form:"code" binding:"required"`
 }
 //登录页面
-func (l Login) Login (c *gin.Context)  {
+func (l *Login) Login (c *gin.Context)  {
 
 	//展示登录页面
 	if helper.IsGet(c) {
@@ -61,7 +60,7 @@ func (l Login) Login (c *gin.Context)  {
 	}
 }
 //验证码
-func (l Login) Code (c *gin.Context)  {
+func (l *Login) Code (c *gin.Context)  {
 	data, _ := captcha.New(102, 35)
 
 	helper.SetFlash(c, "code", data.Text)
@@ -69,7 +68,7 @@ func (l Login) Code (c *gin.Context)  {
 }
 
 //退出
-func (l Login) Logout (c *gin.Context)  {
+func (l *Login) Logout (c *gin.Context)  {
 	helper.ClearSession(c)
 	c.Redirect(http.StatusFound, "/admin/login")
 }

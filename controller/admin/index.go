@@ -13,11 +13,10 @@ import (
 )
 
 type Index struct {
-	*Base
 }
 
 //首页
-func (i Index) Index (c *gin.Context)  {
+func (i *Index) Index (c *gin.Context)  {
 	userInfo := helper.GetSession(c, "userInfo")
 	c.HTML(http.StatusOK, "admin/index/index.html",  gin.H{
 		"nickName":userInfo,
@@ -25,7 +24,7 @@ func (i Index) Index (c *gin.Context)  {
 }
 
 //info
-func (i Index) Info (c *gin.Context)  {
+func (i *Index) Info (c *gin.Context)  {
 	addrs, err := net.InterfaceAddrs()
 	helper.CheckErr(err)
 	var ip string
@@ -51,7 +50,7 @@ type PassData struct {
 	CekPwd string `form:"new_pwd_confirmation" binding:"required"`
 }
 //修改密码
-func (i Index) Pass (c *gin.Context)  {
+func (i *Index) Pass (c *gin.Context)  {
 	//展示登录页面
 	if helper.IsGet(c) {
 		errorMsg := helper.GetFlash(c, "errorMsg")
@@ -97,6 +96,6 @@ func (i Index) Pass (c *gin.Context)  {
 	}
 }
 
-func (i Index) Recom (c *gin.Context){
+func (i *Index) Recom (c *gin.Context){
 
 }
