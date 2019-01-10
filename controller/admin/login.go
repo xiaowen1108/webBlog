@@ -68,7 +68,7 @@ func (l Login) Code (c *gin.Context)  {
 	data.WriteImage(c.Writer)
 }
 
-//验证码
+//退出
 func (l Login) Logout (c *gin.Context)  {
 	helper.ClearSession(c)
 	c.Redirect(http.StatusFound, "/admin/login")
