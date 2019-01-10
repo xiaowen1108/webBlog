@@ -12,6 +12,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"crypto/sha256"
 	"webBlog/helper"
+	"html/template"
+	"time"
 )
 
 func main() {
@@ -22,6 +24,9 @@ func main() {
 	//set config
 	helper.InitConfigManager(configFile)
 	config := helper.GetConfig()
+	//time
+	timelocal,_ := time.LoadLocation("Asia/Shanghai")
+	time.Local = timelocal
 	//init DB
 	dbName := config.GetValue("app", "db")
 	DB, err := model.InitDB(dbName, config.GetSection(dbName))
@@ -41,26 +46,25 @@ func main() {
 	//setRoute
 	setRoute(router)
 	//setView
+	funcMap := template.FuncMap{
+		"url": helper.Url,
+	}
+	router.SetFuncMap(funcMap)
 	router.LoadHTMLGlob("./view/***/**/*")
 	router.Run(config.GetValue("app", "runPort"))
 }
 
 func setRoute(r *gin.Engine){
 	adminR := r.Group("/admin")
-	adminR.Use(checkAdminLogin([]string{"/admin/login", "/admin/code"}))
+	//adminR.Use(checkAdminLogin([]string{"/admin/login", "/admin/code"}))
 	{
 		adminR.GET("/login", admin.Login{}.Login)
 		adminR.POST("/login", admin.Login{}.Login)
+		adminR.GET("/layout", admin.Login{}.Logout)
 		adminR.GET("/code", admin.Login{}.Code)
-		adminR.GET("/index", admin.Login{}.Index)
-				//'login', 'LoginController@login');
-				//Route::get('code', 'LoginController@code');
-				//});
-				//Route::group(['prefix' => 'admin','namespace'=>'Admin','middleware'=>'admin.auth'], function () {
-				//Route::get('index', 'IndexController@index');
-				//Route::get('/', 'IndexController@index');
-				//Route::get('info', 'IndexController@info');
-				//Route::get('layout', 'IndexController@layout');
+		adminR.GET("/index", admin.Index{}.Index)
+		adminR.GET("/", admin.Index{}.Index)
+		adminR.GET("/info", admin.Index{}.Info)
 				//Route::any('pass', 'IndexController@pass');
 				//Route::post('category/changeorder', 'CategoryController@changeorder');
 				//Route::resource('category', 'CategoryController');

@@ -31,6 +31,11 @@ func SetSession(c *gin.Context, key,value interface{}){
 	session.Set(key, value)
 	session.Save()
 }
+func ClearSession(c *gin.Context)  {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+}
 func IsGet(c *gin.Context) bool {
 	return c.Request.Method == "GET"
 }

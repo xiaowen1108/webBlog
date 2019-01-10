@@ -48,7 +48,7 @@ func (l Login) Login (c *gin.Context)  {
 			secret := config.GetValue("app", "secret")
 			loginData.Password = fmt.Sprintf("%x", h.Sum([]byte(secret)))
 			if loginData.Username == adminUser.Name && loginData.Password == adminUser.Pwd {
-				helper.SetSession(c, "userInfo", adminUser)
+				helper.SetSession(c, "userInfo", adminUser.Nickname)
 				c.Redirect(http.StatusFound, "/admin/index")
 			} else {
 				helper.SetFlash(c, "loginErrorMsg", "用户名或密码有误 ！")
@@ -68,8 +68,9 @@ func (l Login) Code (c *gin.Context)  {
 	data.WriteImage(c.Writer)
 }
 
-//首页
-func (l Login) Index (c *gin.Context)  {
-	c.String(http.StatusOK, "首页")
+//验证码
+func (l Login) Logout (c *gin.Context)  {
+	helper.ClearSession(c)
+	c.Redirect(http.StatusFound, "/admin/login")
 }
 
