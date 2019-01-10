@@ -1,0 +1,91 @@
+{{define "admin/category/index.html"}}
+{{template "admin/layout/header.html"}}
+<body>
+<!--面包屑导航 开始-->
+<div class="crumb_warp">
+    <!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->
+    <i class="fa fa-home"></i> <a href="{{"/admin/info"|url}}">首页</a> &raquo; 所有分类
+</div>
+<!--面包屑导航 结束-->
+<div class="result_wrap">
+    <div class="result_title">
+        <h3>分类管理</h3>
+    </div>
+    <!--快捷导航 开始-->
+<div class="result_content">
+<div class="short_wrap">
+        <a href="{{"/admin/category/add"|url}}"><i class="fa fa-plus"></i>新增分类</a>
+        <a href="{{"/admin/category/index"|url}}"><i class="fa fa-refresh"></i>更新排序</a>
+</div>
+</div>
+    <!--快捷导航 结束-->
+</div>
+
+<!--搜索结果页面 列表 开始-->
+<form action="#" method="post">
+
+<div class="result_wrap">
+<div class="result_content">
+<table class="list_tab">
+    <tr>
+        <th class="tc" width="5%">排序</th>
+        <th class="tc" width="5%">ID</th>
+        <th>分类名称</th>
+        <th>title</th>
+        <th>keywords</th>
+        <th>description</th>
+        <th>操作</th>
+    </tr>
+
+    @foreach($data as $v)
+<tr>
+<td class="tc">
+        <input type="text" value="" onchange="sort(this,'')">
+</td>
+<td class="tc"></td>
+<td>
+<a href="#"></a>
+</td>
+<td></td>
+<td></td>
+<td></td>
+<td>
+        <a href="">修改</a>
+        <a href="javascript:;" onclick="del()">删除</a>
+</td>
+</tr>
+    @endforeach
+</table>
+</div>
+</div>
+</form>
+<!--搜索结果页面 列表 结束-->
+<script>
+function sort(obj,id){
+    var sort = $(obj).val();
+$.post("{{"admin/category/changeorder"|url}}",{'id':id,'sort':sort},function(data){
+if(data.status){
+    layer.msg(data.info, {icon: 6});
+}else{
+layer.msg(data.info, {icon: 5});
+}
+});
+}
+function del(id) {
+layer.confirm('确定要删除这个分类吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+$.post("{{"admin/category/"|url}}/"+id,{'_method':'delete','_token':"{{csrf_token()}}"},function (data) {
+if(data.status==1){
+    layer.msg(data.info, {icon: 6});
+    setInterval(function(){window.location.reload();},2000);
+}else{
+    layer.msg(data.info, {icon: 5});
+}
+});
+})
+}
+</script>
+</body>
+{{template "admin/layout/footer.html"}}
+{{end}}
