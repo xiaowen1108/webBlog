@@ -1,7 +1,7 @@
 module webBlog
 
 require (
-	github.com/Unknwon/goconfig v0.0.0-20181105214110-56bd8ab18619 // indirect
+	github.com/Unknwon/goconfig v0.0.0-20181105214110-56bd8ab18619
 	github.com/gin-contrib/sessions v0.0.0-20190101140330-dc5246754963
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1 // indirect

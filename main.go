@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/Unknwon/goconfig"
 	"webBlog/model"
 	"github.com/gin-gonic/gin"
 	"webBlog/controller/admin"
@@ -12,70 +11,48 @@ import (
 	"net/http"
 	"github.com/jinzhu/gorm"
 	"crypto/sha256"
+	"webBlog/helper"
 )
-var appConfigFile, dbConfigFile string
-var appConf,dbConf *goconfig.ConfigFile
+
 func main() {
 	//config file
-	flag.StringVar(&appConfigFile, "app_conf_file", "config/app.ini", "web app config file")
-	flag.StringVar(&dbConfigFile,"db_conf_file", "config/db.ini", "web db config file")
+	var configFile string
+	flag.StringVar(&configFile, "app_conf_file", "config/app.ini", "web app config file")
 	flag.Parse()
-	//read app.ini
-	var err error
-	appConf, err = goconfig.LoadConfigFile(appConfigFile)
-	checkErr(err)
-	//read db.ini
-	dbConf, err = goconfig.LoadConfigFile(dbConfigFile)
-	checkErr(err)
-	//read db select
-	dbName, err := appConf.GetValue("app", "db")
-	checkErr(err)
-	//read db config
-	dbConfig, err := dbConf.GetSection(dbName)
-	checkErr(err)
+	//set config
+	helper.InitConfigManager(configFile)
+	config := helper.GetConfig()
 	//init DB
-	DB, err := model.InitDB(dbName, dbConfig)
-	checkErr(err)
+	dbName := config.GetValue("app", "db")
+	DB, err := model.InitDB(dbName, config.GetSection(dbName))
+	helper.CheckErr(err)
 	defer DB.Close()
 	//init user
 	createAdminUser(DB)
 	//gin start
-	ginMode, err := appConf.GetValue("app", "runMode")
-	checkErr(err)
-	gin.SetMode(ginMode)
+	gin.SetMode(config.GetValue("app", "runMode"))
 	router := gin.Default()
-	//session
-	secret, err := appConf.GetValue("app", "secret")
-	checkErr(err)
-	store := cookie.NewStore([]byte(secret))
-	store.Options(sessions.Options{HttpOnly: true, MaxAge: 7 * 86400, Path: "/"}) //Also set Secure: true if using SSL, you should though
-	sessionName, err := appConf.GetValue("app", "sessionName")
-	checkErr(err)
-	router.Use(sessions.Sessions(sessionName, store))
+	//session init
+	store := cookie.NewStore([]byte(config.GetValue("app", "secret")))
+	//store.Options(sessions.Options{HttpOnly: true, MaxAge: 7 * 86400, Path: "/"}) //Also set Secure: true if using SSL, you should though
+	router.Use(sessions.Sessions(config.GetValue("app", "sessionName"), store))
 	//static
 	router.Static("/static", "./static")
 	//setRoute
 	setRoute(router)
-	runPort, err := appConf.GetValue("app", "runPort")
-	checkErr(err)
 	//setView
 	router.LoadHTMLGlob("./view/***/**/*")
-	router.Run(runPort)
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
+	router.Run(config.GetValue("app", "runPort"))
 }
 
 func setRoute(r *gin.Engine){
 	adminR := r.Group("/admin")
-	adminR.Use(checkAdminLogin())
+	adminR.Use(checkAdminLogin([]string{"/admin/login", "/admin/code"}))
 	{
 		adminR.GET("/login", admin.Login{}.Login)
 		adminR.POST("/login", admin.Login{}.Login)
 		adminR.GET("/code", admin.Login{}.Code)
+		adminR.GET("/index", admin.Login{}.Index)
 				//'login', 'LoginController@login');
 				//Route::get('code', 'LoginController@code');
 				//});
@@ -104,17 +81,23 @@ func setRoute(r *gin.Engine){
 	}
 }
 
-func checkAdminLogin() gin.HandlerFunc {
+func checkAdminLogin(exceptPath []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Println(c.Request.URL)
 		url := c.Request.URL.Path
-		if url == "/admin/login" || url == "/admin/code" {
+		var flag bool
+		for _, path := range exceptPath {
+			if path == url {
+				flag = true
+				break
+			}
+		}
+		if flag {
 			c.Next()
 		} else {
-			session := sessions.Default(c)
-			userInfo := session.Get("userInfo")
+			userInfo := helper.GetSession(c, "userInfo")
 			if userInfo == nil {
-				c.Redirect(http.StatusMovedPermanently, "/admin/login")
+				c.Redirect(http.StatusFound, "/admin/login")
+				return
 			} else {
 				c.Next()
 			}
@@ -126,19 +109,18 @@ func createAdminUser(DB *gorm.DB) {
 	var adminUser model.AdminUser
 
 	if DB.First(&adminUser).RecordNotFound() {
+		config := helper.GetConfig()
 		//创建用户
-		username, err := appConf.GetValue("account", "username")
-		checkErr(err)
-		password, err := appConf.GetValue("account", "password")
-		checkErr(err)
+		username := config.GetValue("account", "username")
+		password := config.GetValue("account", "password")
 		adminUser.Name = username
 		adminUser.Nickname = username
 		h := sha256.New()
 		h.Write([]byte(password))
-		secret, err := appConf.GetValue("app", "secret")
-		checkErr(err)
+		secret := config.GetValue("account", "secret")
 		adminUser.Pwd = fmt.Sprintf("%x", h.Sum([]byte(secret)))
 		DB.Create(&adminUser)
 	}
 
 }
+

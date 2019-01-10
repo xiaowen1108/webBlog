@@ -7,6 +7,7 @@ import (
 
 func SetFlash(c *gin.Context, key string, value interface{}) {
 	session := sessions.Default(c)
+	session.Delete(key)
 	session.AddFlash(value, key)
 	session.Save()
 }
@@ -20,11 +21,26 @@ func GetFlash(c *gin.Context, key string)  interface{}{
 	}
 	return ""
 }
+func GetSession(c *gin.Context, key string)  interface{}{
+	session := sessions.Default(c)
+	return session.Get(key)
+}
 
+func SetSession(c *gin.Context, key,value interface{}){
+	session := sessions.Default(c)
+	session.Set(key, value)
+	session.Save()
+}
 func IsGet(c *gin.Context) bool {
 	return c.Request.Method == "GET"
 }
 
 func IsPost(c *gin.Context) bool  {
 	return c.Request.Method == "POST"
+}
+
+func CheckErr(err error) {
+	if err != nil{
+		panic(err)
+	}
 }
