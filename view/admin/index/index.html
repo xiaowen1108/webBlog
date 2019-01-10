@@ -1,0 +1,70 @@
+{{define "admin/index/index.html"}}
+{{template "admin/layout/header.html"}}
+<body>
+<!--头部 开始-->
+<div class="top_box">
+<div class="top_left">
+    <div class="logo">webBlog管理后台</div>
+<ul>
+    <li><a href="{{"/"|url}}" class="active" target="_blank">首页</a></li>
+<li><a href="{{"/admin/index"|url}}">管理页</a></li>
+</ul>
+</div>
+<div class="top_right">
+<ul>
+<li>管理员：{{.nickName}}</li>
+{{/*<li><a href="{{"/admin/pass"|url}}" target="main">修改密码</a></li>*/}}
+<li><a href="{{"/admin/layout"|url}}">退出</a></li>
+</ul>
+</div>
+</div>
+<!--头部 结束-->
+
+<!--左侧导航 开始-->
+<div class="menu_box">
+<ul>
+<li>
+    <h3><i class="fa fa-fw fa-clipboard"></i>常用操作</h3>
+<ul class="sub_menu">
+<li><a href="{{"/admin/category/create"|url}}" target="main"><i class="fa fa-fw  fa-stumbleupon"></i>添加分类</a></li>
+<li><a href="{{"/admin/category"|url}}" target="main"><i class="fa fa-fw fa-jsfiddle"></i>分类管理</a></li>
+<li><a href="{{"/admin/article/create"|url}}" target="main"><i class="fa fa-fw fa-plus-square"></i>添加文章</a></li>
+<li><a href="{{"/admin/article"|url}}" target="main"><i class="fa fa-fw fa-list-ul"></i>文章管理</a></li>
+<li><a href="{{"/admin/recom"|url}}" target="main"><i class="fa fa-fw fa-image"></i>轮播管理</a></li>
+</ul>
+</li>
+<li>
+    <h3><i class="fa fa-fw fa-cog"></i>系统设置</h3>
+<ul class="sub_menu">
+<li><a href="{{"/admin/config"|url}}" target="main"><i class="fa fa-fw fa-cubes"></i>网站配置</a></li>
+<li><a href="{{"/admin/linksg"|url}}" target="main"><i class="fa fa-fw fa-list-alt"></i>友链管理</a></li>
+<li><a href="{{"/admin/linksg"|url}}" target="main"><i class="fa fa-fw fa-database"></i>自定义导航</a></li>
+<li><a href="http://az1314.duoshuo.com/admin/" target="main"><i class="fa fa-circle-o-notch"></i>评论管理</a></li>
+</ul>
+</li>
+    <li>
+        <h3><i class="fa fa-fw fa-thumb-tack"></i>工具导航</h3>
+        <ul class="sub_menu">
+            <li><a href="http://www.yeahzan.com/fa/facss.html" target="main"><i class="fa fa-fw fa-font"></i>图标调用</a></li>
+            <li><a href="http://hemin.cn/jq/cheatsheet.html" target="main"><i class="fa fa-fw fa-chain"></i>Jquery手册</a></li>
+            <li><a href="http://tool.c7sky.com/webcolor/" target="main"><i class="fa fa-fw fa-tachometer"></i>配色板</a></li>
+        </ul>
+    </li>
+</ul>
+</div>
+<!--左侧导航 结束-->
+
+<!--主体部分 开始-->
+<div class="main_box">
+        <iframe src="{{"/admin/info"|url}}" frameborder="0" width="100%" height="100%" name="main"></iframe>
+</div>
+<!--主体部分 结束-->
+
+<!--底部 开始-->
+<div class="bottom_box">
+    CopyRight © 2019. Powered By <a href="https://www.az1314.cn">小文</a>.
+</div>
+<!--底部 结束-->
+</body>
+{{template "admin/layout/footer.html"}}
+{{end}}

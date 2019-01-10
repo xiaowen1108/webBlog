@@ -1,0 +1,50 @@
+{{define "admin/index/info.html"}}
+{{template "admin/layout/header.html"}}
+<body>
+<!--面包屑导航 开始-->
+<div class="crumb_warp">
+    <i class="fa fa-home"></i> <a href="{{"/admin/info"|url}}">首页</a> &raquo; 系统环境
+</div>
+<!--面包屑导航 结束-->
+
+
+<div class="result_wrap">
+    <div class="result_title">
+        <h3>系统基本信息</h3>
+    </div>
+<div class="result_content">
+<ul>
+    <li>
+        <label>小文设计-版本</label><span>version-1.0</span>
+    </li>
+    <li>
+        <label>操作系统</label><span>{{.os}}-{{.goarch}}</span>
+    </li>
+    <li>
+        <label>当前时间</label><span>{{.time}}</span>
+    </li>
+    <li>
+        <label>Host</label><span>{{.ip}}</span>
+    </li>
+</ul>
+</div>
+</div>
+
+
+<div class="result_wrap">
+    <div class="result_title">
+        <h3>相关信息</h3>
+    </div>
+    <div class="result_content">
+        <ul>
+            <li>
+                <label>My_Blog：</label><span><a href="https://www.az1314.cn" target="_top">https://www.az1314.cn</a></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--结果集列表组件 结束-->
+
+</body>
+{{template "admin/layout/footer.html"}}
+{{end}}
