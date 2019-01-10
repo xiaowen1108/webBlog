@@ -72,13 +72,13 @@ func setRoute(r *gin.Engine){
 		adminR.POST("/recom", admin.Index{}.Recom)
 		//分类
 		adminR.GET("/category/index", admin.Category{}.Index)
-		adminR.GET("/category/edit", admin.Category{}.Add)
+		adminR.GET("/category/add", admin.Category{}.Add)
 		adminR.POST("/category/edit/:id", admin.Category{}.Edit)
 		adminR.GET("/category/del/:id", admin.Category{}.Del)
 		adminR.POST("/category/changeorder/:id", admin.Category{}.ChangeOrder)
 		//文章
 		adminR.GET("/article/index", admin.Article{}.Index)
-		adminR.GET("/article/edit", admin.Article{}.Add)
+		adminR.GET("/article/add", admin.Article{}.Add)
 		adminR.POST("/article/edit/:id", admin.Article{}.Edit)
 		adminR.GET("/article/del/:id", admin.Article{}.Del)
 		adminR.POST("/article/changeorder/:id", admin.Article{}.ChangeOrder)
@@ -88,19 +88,19 @@ func setRoute(r *gin.Engine){
 		adminR.POST("/upload", admin.Base{}.Upload)
 		//友情链接
 		adminR.GET("/links/index", admin.Link{}.Index)
-		adminR.GET("/links/edit", admin.Link{}.Add)
+		adminR.GET("/links/add", admin.Link{}.Add)
 		adminR.POST("/links/edit/:id", admin.Link{}.Edit)
 		adminR.GET("/links/del/:id", admin.Link{}.Del)
 		adminR.POST("/links/changeorder", admin.Link{}.ChangeOrder)
 		//导航
 		adminR.GET("/navs/index", admin.Nav{}.Index)
-		adminR.GET("/navs/edit", admin.Nav{}.Add)
+		adminR.GET("/navs/add", admin.Nav{}.Add)
 		adminR.POST("/navs/edit/:id", admin.Nav{}.Edit)
 		adminR.GET("/navs/del/:id", admin.Nav{}.Del)
 		adminR.POST("/navs/changeorder", admin.Nav{}.ChangeOrder)
 		//设置
 		adminR.GET("/config/index", admin.Config{}.Index)
-		adminR.GET("/config/edit", admin.Config{}.Add)
+		adminR.GET("/config/add", admin.Config{}.Add)
 		adminR.POST("/config/edit/:id", admin.Config{}.Edit)
 		adminR.GET("/config/del/:id", admin.Config{}.Del)
 		adminR.POST("/config/changeorder", admin.Config{}.ChangeOrder)
