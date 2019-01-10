@@ -15,6 +15,9 @@ div.edui-box{overflow: hidden; height:22px;}
 .editormd-image-dialog{
     height: 300px!important;
 }
+.editormd-file-input{
+    margin-left: 0px!important;
+}
 </style>
 <!--面包屑导航 开始-->
 <div class="crumb_warp">
@@ -117,7 +120,7 @@ $('#file_upload').uploadify({
             path: "/static/common/editor/lib/", // Autoload modules mode, codemirror, marked... dependents libs path
             imageUpload: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL: "/upload",//上传的请求,需要返回如下格式:
+            imageUploadURL: "/admin/upload",//上传的请求,需要返回如下格式:
         })
 
         /*
