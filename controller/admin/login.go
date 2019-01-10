@@ -49,14 +49,14 @@ func (l *Login) Login (c *gin.Context)  {
 			if loginData.Username == adminUser.Name && loginData.Password == adminUser.Pwd {
 				helper.SetSession(c, "userInfo", adminUser.Nickname)
 				c.Redirect(http.StatusFound, "/admin/index")
+				return
 			} else {
 				helper.SetFlash(c, "loginErrorMsg", "用户名或密码有误 ！")
-				c.Redirect(http.StatusFound, "/admin/login")
 			}
 		} else {
 			helper.SetFlash(c, "loginErrorMsg", "请检查账户是否输入完全 ！")
-			c.Redirect(http.StatusFound, "/admin/login")
 		}
+		c.Redirect(http.StatusFound, "/admin/login")
 	}
 }
 //验证码

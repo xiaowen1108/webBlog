@@ -8,7 +8,6 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/sessions"
 	"fmt"
-	"net/http"
 	"github.com/jinzhu/gorm"
 	"crypto/sha256"
 	"webBlog/helper"
@@ -56,7 +55,8 @@ func main() {
 
 func setRoute(r *gin.Engine){
 	adminR := r.Group("/admin")
-	//adminR.Use(checkAdminLogin([]string{"/admin/login", "/admin/code"}))
+	//自定义admin auth中间件
+	//adminR.Use(middleware.CheckAdminLogin([]string{"/admin/login", "/admin/code"}))
 	{
 		//登录
 		loginController := &admin.Login{}
@@ -76,9 +76,11 @@ func setRoute(r *gin.Engine){
 		categoryController := &admin.Category{}
 		adminR.GET("/category/index", categoryController.Index)
 		adminR.GET("/category/add", categoryController.Add)
+		adminR.POST("/category/add", categoryController.Add)
+		adminR.GET("/category/edit/:id", categoryController.Edit)
 		adminR.POST("/category/edit/:id", categoryController.Edit)
-		adminR.GET("/category/del/:id", categoryController.Del)
-		adminR.POST("/category/changeorder/:id", categoryController.ChangeOrder)
+		adminR.POST("/category/del/:id", categoryController.Del)
+		adminR.POST("/category/changeorder", categoryController.ChangeOrder)
 		//文章
 		articleController := &admin.Article{}
 		adminR.GET("/article/index", articleController.Index)
@@ -114,30 +116,6 @@ func setRoute(r *gin.Engine){
 		adminR.POST("/config/changeorder", confController.ChangeOrder)
 		adminR.GET("/config/putfile", confController.PutFile)
 		adminR.POST("/config/changecontent", confController.ChangeContent)
-	}
-}
-
-func checkAdminLogin(exceptPath []string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		url := c.Request.URL.Path
-		var flag bool
-		for _, path := range exceptPath {
-			if path == url {
-				flag = true
-				break
-			}
-		}
-		if flag {
-			c.Next()
-		} else {
-			userInfo := helper.GetSession(c, "userInfo")
-			if userInfo == nil {
-				c.Redirect(http.StatusFound, "/admin/login")
-				return
-			} else {
-				c.Next()
-			}
-		}
 	}
 }
 

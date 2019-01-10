@@ -17,13 +17,13 @@
 </div>
 </div>
 <div class="result_wrap">
-        <form action="{{"admin/category/edit"|url}}" method="post">
+        <form action="{{"/admin/category/edit"|url}}/{{.category.ID}}" method="post">
 <table class="add_tab">
 <tbody>
 <tr>
     <th><i class="require">*</i>分类名称：</th>
     <td>
-        <input type="text" name="name">
+        <input type="text" name="name" value="{{.category.Name}}">
         <span><i class="fa fa-exclamation-circle yellow"></i>分类名称必须填写</span>
     </td>
 </tr>
@@ -32,31 +32,34 @@
 <td>
 <select name="pid">
     <option value="0">==顶级分类==</option>
+{{range .categorys}}
+    <option value="{{.ID}}" {{if eq .ID $.category.Pid}}selected{{end}}>{{.Name}}</option>
+{{end}}
 </select>
 </td>
 </tr>
 <tr>
-    <th><i class="require">*</i>SEO-标题：</th>
+    <th>SEO-标题：</th>
     <td>
-        <input type="text" class="lg" name="seo_title">
+        <input type="text" class="lg" name="seo_title" value="{{.category.SeoTitle}}">
     </td>
 </tr>
 <tr>
-    <th><i class="require">*</i>SEO-关键词：</th>
+    <th>SEO-关键词：</th>
     <td>
-        <textarea name="seo_key"></textarea>
+        <textarea name="seo_key">{{.category.SeoKey}}</textarea>
     </td>
 </tr>
 <tr>
-    <th><i class="require">*</i>SEO-描述：</th>
+    <th>SEO-描述：</th>
     <td>
-        <textarea name="seo_desc"></textarea>
+        <textarea name="seo_desc">{{.category.SeoDesc}}</textarea>
     </td>
 </tr>
 <tr>
     <th>排序：</th>
     <td>
-        <input type="text" class="sm" name="sort" value="0">
+        <input type="text" class="sm" name="sort" value="{{.category.Sort}}">
     </td>
 </tr>
 <tr>

@@ -3,6 +3,7 @@ package helper
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
+	"net/http"
 )
 
 func SetFlash(c *gin.Context, key string, value interface{}) {
@@ -48,4 +49,11 @@ func CheckErr(err error) {
 	if err != nil{
 		panic(err)
 	}
+}
+
+func ReturnJson(c *gin.Context, status int, info string) {
+	c.JSON(http.StatusOK, gin.H{
+		"status":status,
+		"info":info,
+	})
 }

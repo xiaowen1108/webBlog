@@ -37,24 +37,24 @@
         <th>操作</th>
     </tr>
 
-    @foreach($data as $v)
+{{range .categorys}}
 <tr>
 <td class="tc">
-        <input type="text" value="" onchange="sort(this,'')">
+        <input type="text" value="{{.Sort}}" onchange="sort(this,{{.ID}})">
 </td>
-<td class="tc"></td>
+<td class="tc">{{.ID}}</td>
 <td>
-<a href="#"></a>
+<a href="#">{{if ne .Pid 0}}--{{end}}{{.Name}}</a>
 </td>
-<td></td>
-<td></td>
-<td></td>
+<td>{{.SeoTitle}}</td>
+<td>{{.SeoKey}}</td>
+<td>{{.SeoDesc}}</td>
 <td>
-        <a href="">修改</a>
-        <a href="javascript:;" onclick="del()">删除</a>
+        <a href="{{"/admin/category/edit"|url}}/{{.ID}}">修改</a>
+        <a href="javascript:;" onclick="del({{.ID}})">删除</a>
 </td>
 </tr>
-    @endforeach
+{{end}}
 </table>
 </div>
 </div>
@@ -63,7 +63,7 @@
 <script>
 function sort(obj,id){
     var sort = $(obj).val();
-$.post("{{"admin/category/changeorder"|url}}",{'id':id,'sort':sort},function(data){
+$.post("{{"/admin/category/changeorder"|url}}",{'id':id,'sort':sort},function(data){
 if(data.status){
     layer.msg(data.info, {icon: 6});
 }else{
@@ -75,7 +75,7 @@ function del(id) {
 layer.confirm('确定要删除这个分类吗？', {
             btn: ['确定','取消'] //按钮
         }, function(){
-$.post("{{"admin/category/"|url}}/"+id,{'_method':'delete','_token':"{{csrf_token()}}"},function (data) {
+$.post("{{"/admin/category/del"|url}}/"+id,{},function (data) {
 if(data.status==1){
     layer.msg(data.info, {icon: 6});
     setInterval(function(){window.location.reload();},2000);
