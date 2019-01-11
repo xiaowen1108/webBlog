@@ -39,7 +39,7 @@ div.edui-box{overflow: hidden; height:22px;}
 <!--结果集标题与导航组件 结束-->
 
 <div class="result_wrap">
-        <form action="" method="post">
+        <form action="{{"/admin/article/add"|url}}" method="post">
 <table class="add_tab">
 <tbody>
 <tr>
@@ -53,6 +53,9 @@ div.edui-box{overflow: hidden; height:22px;}
 <td>
 <select name="cid">
     <option value="" >==请选择文章分类==</option>
+    {{range .categorys}}
+        <option value="{{.ID}}" >{{if ne .Pid 0}}--{{end}}{{.Name}}</option>
+    {{end}}
 </select>
 </td>
 </tr>
@@ -81,7 +84,7 @@ div.edui-box{overflow: hidden; height:22px;}
     <th>文章内容：</th>
 <td style="height: 640px!important;">
     <div id="editormd">
-        <textarea style="display:none;">### Hello Editor.md !</textarea>
+        <textarea style="display:none;" name="content">### Hello webBlog !</textarea>
     </div>
 </td>
 </tr>
