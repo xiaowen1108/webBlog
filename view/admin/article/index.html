@@ -51,7 +51,7 @@
 <td>{{dateFormat .CreatedAt "2006-01-02 15:04"}}</td>
 <td>{{dateFormat .UpdatedAt "2006-01-02 15:04"}}</td>
 <td>
-        <a href="">修改</a>
+        <a href="{{"/admin/article/edit"|url}}/{{.ID}}">修改</a>
         <a href="javascript:;" onclick="del({{.ID}})">删除</a>
 </td>
 </tr>

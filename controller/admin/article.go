@@ -5,9 +5,9 @@ import (
 	"webBlog/helper"
 	"net/http"
 	"webBlog/model"
-	"fmt"
 	"strconv"
 	"html/template"
+	"strings"
 )
 
 type Article struct {
@@ -56,14 +56,13 @@ func (t *Article) Add (c *gin.Context){
 				Title:articleData.Title,
 				Cid:articleData.Cid,
 				Description:articleData.Description,
-				Tags:articleData.Tags,
+				Tags:strings.Replace(articleData.Tags,"，", "," , -1),
 				Cover:articleData.Cover,
 				Content:articleData.Content,
 			}
 			err := model.DB.Create(&article).Error
 			if err == nil {
-				fmt.Println(article.ID)
-				model.HandelTagAdd(articleData.Tags)
+				model.HandelTagAdd(article.Tags)
 				helper.SetFlash(c, "errorMsg", "添加成功 ！")
 			} else {
 				helper.SetFlash(c, "errorMsg", "添加失败 ！")
@@ -76,7 +75,44 @@ func (t *Article) Add (c *gin.Context){
 }
 
 func (t *Article) Edit (c *gin.Context){
-
+	id := c.Param("id")
+	var article model.Article
+	err := model.DB.Where("id = ?", id).First(&article).Error
+	if err != nil {
+		c.Redirect(http.StatusFound, "/admin/article/index")
+		return
+	}
+	oldTags := article.Tags
+	if helper.IsGet(c) {
+		//获取所有的分类
+		categorys := model.GetTree()
+		errorMsg := helper.GetFlash(c, "errorMsg")
+		c.HTML(http.StatusOK, "admin/article/edit.html",gin.H{
+			"errorMsg":errorMsg,
+			"categorys":categorys,
+			"article":article,
+		})
+	} else if helper.IsPost(c) {
+		var articleData ArticleData
+		if err := c.ShouldBind(&articleData); err == nil {
+			article.Title = articleData.Title
+			article.Cid = articleData.Cid
+			article.Description = articleData.Description
+			article.Tags = articleData.Tags
+			article.Cover = articleData.Cover
+			article.Content = articleData.Content
+			err := model.DB.Save(&article).Error
+			if err == nil {
+				model.HandelTagEdit(oldTags, article.Tags)
+				helper.SetFlash(c, "errorMsg", "编辑成功 ！")
+			} else {
+				helper.SetFlash(c, "errorMsg", "编辑失败 ！")
+			}
+		} else {
+			helper.SetFlash(c, "errorMsg", "缺少参数 ！")
+		}
+		c.Redirect(http.StatusFound, "/admin/article/add")
+	}
 }
 
 func (t *Article) Del (c *gin.Context){
