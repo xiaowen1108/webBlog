@@ -1,5 +1,5 @@
 #webBlog
-[demo地址](https://www.az1314.cn/)
+[小文博客地址](https://www.az1314.cn/)
 
 ## 初衷
 之前博客项目[小文博客](https://www.az1314.cn/)基于自己通过swoole改造laravel框架运行lnmp+swoole环境中；
