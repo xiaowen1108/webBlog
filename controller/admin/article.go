@@ -111,7 +111,7 @@ func (t *Article) Edit (c *gin.Context){
 		} else {
 			helper.SetFlash(c, "errorMsg", "缺少参数 ！")
 		}
-		c.Redirect(http.StatusFound, "/admin/article/add")
+		c.Redirect(http.StatusFound, "/admin/article/eidt/"+id)
 	}
 }
 
