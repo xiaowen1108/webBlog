@@ -1,6 +1,9 @@
 package helper
 
-import "time"
+import (
+	"time"
+	"html/template"
+)
 
 func Url(path string) string{
 	return path
@@ -8,4 +11,8 @@ func Url(path string) string{
 
 func DateFormat(date time.Time, layout string) string {
 	return date.Format(layout)
+}
+
+func TmpHtml(h string)  template.HTML{
+	return template.HTML(h)
 }

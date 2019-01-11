@@ -21,48 +21,48 @@
 <!--结果集标题与配置项组件 结束-->
 
 <div class="result_wrap">
-        <form action="" method="post">
+        <form action="{{"/admin/config/edit"|url}}/{{.config.ID}}" method="post">
 <table class="add_tab">
 <tbody>
 <tr>
     <th><i class="require">*</i>标题：</th>
 <td>
-        <input type="text" name="title" value="">
+        <input type="text" name="title" value="{{.config.Title}}">
     <span><i class="fa fa-exclamation-circle yellow"></i>配置项标题必须填写</span>
 </td>
 </tr>
 <tr>
     <th><i class="require">*</i>名称：</th>
 <td>
-        <input type="text" name="name" value="">
+        <input type="text" name="name" value="{{.config.Name}}">
     <span><i class="fa fa-exclamation-circle yellow"></i>配置项名称必须填写</span>
 </td>
 </tr>
 <tr>
     <th>类型：</th>
     <td>
-        <input type="radio" name="field_type" value="input"  onclick="showTr()">input　
-        <input type="radio" name="field_type" value="textarea" onclick="showTr()">textarea　
-        <input type="radio" name="field_type" value="radio"  onclick="showTr()">radio
+        <input type="radio" name="field_type" value="input"  {{if eq .config.FieldType "input"}}checked{{end}} onclick="showTr()">input　
+        <input type="radio" name="field_type" value="textarea" {{if eq .config.FieldType "textarea"}}checked{{end}} onclick="showTr()">textarea　
+        <input type="radio" name="field_type" value="radio" {{if eq .config.FieldType "radio"}}checked{{end}}  onclick="showTr()">radio
     </td>
 </tr>
 <tr class="field_value">
     <th>类型值：</th>
 <td>
-        <input type="text" class="lg" name="field_value" value="{{.field_value}}">
+        <input type="text" class="lg" name="field_value" value="{{.config.FieldValue}}">
     <p><i class="fa fa-exclamation-circle yellow"></i>类型值只有在radio的情况下才需要配置，格式 1|开启,0|关闭</p>
 </td>
 </tr>
 <tr>
     <th>排序：</th>
 <td>
-        <input type="text" class="sm" name="sort" value="{{.sort}}">
+        <input type="text" class="sm" name="sort" value="{{.config.Sort}}">
 </td>
 </tr>
 <tr>
     <th>说明：</th>
 <td>
-<textarea id="" cols="30" rows="10" name="tips">{{.tips}}</textarea>
+<textarea id="" cols="30" rows="10" name="tips">{{.config.Tips}}</textarea>
 </td>
 </tr>
 <tr>

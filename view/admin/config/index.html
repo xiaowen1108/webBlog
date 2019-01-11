@@ -20,8 +20,8 @@
     <!--快捷配置项 开始-->
 <div class="result_content">
 <div class="short_wrap">
-        <a href=""><i class="fa fa-plus"></i>添加配置项</a>
-        <a href=""><i class="fa fa-refresh"></i>更新排序</a>
+        <a href="{{"/admin/config/add"|url}}"><i class="fa fa-plus"></i>添加配置项</a>
+        <a href="{{"/admin/config/index"|url}}"><i class="fa fa-refresh"></i>更新排序</a>
 </div>
 </div>
     <!--快捷配置项 结束-->
@@ -29,7 +29,7 @@
 
 <div class="result_wrap">
 <div class="result_content">
-        <form action="" method="post">
+        <form action="{{"/admin/config/changecontent"|url}}" method="post">
 <table class="list_tab">
     <tr>
         <th class="tc" width="5%">排序</th>
@@ -40,24 +40,26 @@
         <th>操作</th>
     </tr>
 
-    @foreach($data as $v)
+{{range .configs}}
 <tr>
 <td class="tc">
-        <input type="text" onchange="sort(this,)" value="">
+        <input type="text" onchange="sort(this,{{.ID}})" value="{{.Sort}}">
 </td>
-<td class="tc"></td>
+<td class="tc">{{.ID}}</td>
 <td>
-
+{{.Title}}
 </td>
-<td></td>
+<td>{{.Name}}</td>
 <td>
-        <input type="hidden" name="id[]" value="">
+        {{.FieldValue|TmpHtml}}
+        <input type="hidden" name="id[]" value="{{.ID}}">
 </td>
 <td>
-        <a href="">修改</a>
-        <a href="javascript:;" onclick="del()">删除</a>
+        <a href="{{"/admin/config/edit"|url}}/{{.ID}}">修改</a>
+        <a href="javascript:;" onclick="del({{.ID}})">删除</a>
 </td>
 </tr>
+{{end}}
 </table>
     <div class="btn_group">
         <input type="submit" value="提交">
@@ -71,7 +73,7 @@
 <script>
 function sort(obj,id){
     var sort = $(obj).val();
-$.post("{{"admin/config/changeorder"|url}}",{'id':id,'sort':sort},function(data){
+$.post("{{"/admin/config/changeorder"|url}}",{'id':id,'sort':sort},function(data){
 if(data.status){
     layer.msg(data.info, {icon: 6});
 }else{
@@ -83,7 +85,7 @@ function del(id) {
 layer.confirm('确定要删除这个配置项吗？', {
             btn: ['确定', '取消'] //按钮
         }, function () {
-$.post("/" + id, {}, function (data) {
+$.post({{"/admin/config/del"|url}} + '/'+ id, {}, function (data) {
 if (data.status == 1) {
     layer.msg(data.info, {icon: 6});
     setInterval(function () {

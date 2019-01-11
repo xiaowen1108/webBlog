@@ -48,6 +48,7 @@ func main() {
 	funcMap := template.FuncMap{
 		"url": helper.Url,
 		"dateFormat":helper.DateFormat,
+		"TmpHtml":helper.TmpHtml,
 	}
 	router.SetFuncMap(funcMap)
 	router.LoadHTMLGlob("./view/***/**/*")
@@ -117,11 +118,13 @@ func setRoute(r *gin.Engine){
 		//设置
 		confController := &admin.Config{}
 		adminR.GET("/config/index", confController.Index)
+		adminR.POST("/config/add", confController.Add)
 		adminR.GET("/config/add", confController.Add)
+		adminR.GET("/config/edit/:id", confController.Edit)
 		adminR.POST("/config/edit/:id", confController.Edit)
-		adminR.GET("/config/del/:id", confController.Del)
+		adminR.POST("/config/del/:id", confController.Del)
 		adminR.POST("/config/changeorder", confController.ChangeOrder)
-		adminR.GET("/config/putfile", confController.PutFile)
+		adminR.POST("/config/putfile", confController.PutFile)
 		adminR.POST("/config/changecontent", confController.ChangeContent)
 	}
 }
