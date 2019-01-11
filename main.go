@@ -47,6 +47,7 @@ func main() {
 	//setView
 	funcMap := template.FuncMap{
 		"url": helper.Url,
+		"dateFormat":helper.DateFormat,
 	}
 	router.SetFuncMap(funcMap)
 	router.LoadHTMLGlob("./view/***/**/*")

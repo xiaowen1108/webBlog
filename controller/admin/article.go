@@ -6,13 +6,31 @@ import (
 	"net/http"
 	"webBlog/model"
 	"fmt"
+	"strconv"
+	"html/template"
 )
 
 type Article struct {
 }
 
 func (t *Article) Index (c *gin.Context){
-
+	//分页
+	p := c.DefaultQuery("page", "1")
+	pnum := 10
+	pi, err := strconv.Atoi(p)
+	if err != nil {
+		pi = 1
+	}
+	pi = (pi - 1) * pnum
+	var articles []*model.Article
+	model.DB.Select("id, title,cover,is_recom,created_at,updated_at").Offset(pi).Limit(pnum).Order("id desc").Find(&articles)
+	var count int
+	model.DB.Model(&model.Article{}).Count(&count)
+	pagination := helper.NewPagination(c.Request, count, pnum)
+	c.HTML(http.StatusOK, "admin/article/index.html",gin.H{
+		"articles":articles,
+		"pages":template.HTML(pagination.Pages()),
+	})
 }
 type ArticleData struct {
 	Title string `form:"name" binding:"required"`
