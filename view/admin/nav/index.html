@@ -1,5 +1,92 @@
 {{define "admin/nav/index.html"}}
 {{template "admin/layout/header.html"}}
+<!--面包屑导航 开始-->
+<div class="crumb_warp">
+    <!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->
+    <i class="fa fa-home"></i> <a href="{{"/admin/info"|url}}">首页</a> &raquo; 自定义导航管理
+</div>
+<!--面包屑导航 结束-->
+<!--搜索结果页面 列表 开始-->
+<form action="#" method="post">
+<div class="result_wrap">
+    <div class="result_title">
+        <h3>自定义导航列表</h3>
+    </div>
+    <!--快捷导航 开始-->
+<div class="result_content">
+<div class="short_wrap">
+        <a href="{{"/admin/navs/add"|url}}"><i class="fa fa-plus"></i>添加导航</a>
+        <a href="{{"/admin/navs/index"|url}}"><i class="fa fa-refresh"></i>更新排序</a>
+</div>
+</div>
+    <!--快捷导航 结束-->
+</div>
+
+<div class="result_wrap">
+<div class="result_content">
+<table class="list_tab">
+    <tr>
+        <th class="tc" width="5%">排序</th>
+        <th class="tc" width="5%">ID</th>
+        <th>导航名称</th>
+        <th>别名</th>
+        <th>导航地址</th>
+        <th>操作</th>
+    </tr>
+
+{{range .navs}}
+<tr>
+<td class="tc">
+        <input type="text" onchange="sort(this,{{.ID}})" value="{{.Sort}}">
+</td>
+<td class="tc">{{.ID}}</td>
+<td>
+<a href="#">{{if ne .Pid 0}}|-{{end}}{{.Name}}</a>
+</td>
+<td>{{.Alias}}</td>
+<td>{{.Url}}</td>
+<td>
+        <a href="{{"/admin/navs/edit"|url}}/{{.ID}}">修改</a>
+        <a href="javascript:;" onclick="del({{.ID}})">删除</a>
+</td>
+</tr>
+{{end}}
+</table>
+
+</div>
+</div>
+</form>
+<!--搜索结果页面 列表 结束-->
+
+<script>
+function sort(obj,id){
+    var sort = $(obj).val();
+$.post("{{"/admin/navs/changeorder"|url}}",{'id':id,'sort':sort},function(data){
+if(data.status){
+    layer.msg(data.info, {icon: 6});
+}else{
+layer.msg(data.info, {icon: 5});
+}
+});
+}
+function del(id) {
+layer.confirm('确定要删除这个自定义导航吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+$.post("{{"/admin/navs/del"|url}}/"+id,{},function (data) {
+if(data.status){
+    layer.msg(data.info, {icon: 6});
+    setInterval(function(){window.location.reload();},2000);
+}else{
+    layer.msg(data.info, {icon: 5});
+}
+});
+})
+}
+
+
+
+</script>
 
 {{template "admin/layout/footer.html"}}
 {{end}}

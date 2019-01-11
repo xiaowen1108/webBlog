@@ -104,11 +104,13 @@ func setRoute(r *gin.Engine){
 		adminR.GET("/links/del/:id", linkController.Del)
 		adminR.POST("/links/changeorder", linkController.ChangeOrder)
 		//导航
-		navController := &admin.Link{}
+		navController := &admin.Nav{}
 		adminR.GET("/navs/index", navController.Index)
 		adminR.GET("/navs/add", navController.Add)
+		adminR.POST("/navs/add", navController.Add)
+		adminR.GET("/navs/edit/:id", navController.Edit)
 		adminR.POST("/navs/edit/:id", navController.Edit)
-		adminR.GET("/navs/del/:id", navController.Del)
+		adminR.POST("/navs/del/:id", navController.Del)
 		adminR.POST("/navs/changeorder", navController.ChangeOrder)
 		//设置
 		confController := &admin.Config{}
