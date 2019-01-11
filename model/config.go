@@ -11,3 +11,12 @@ type Config struct {
 	FieldValue string `gorm:"size:255;not null;default:''"` //类型值
 }
 
+func GetAllConfig() map[string]string {
+	var configs []*Config
+	DB.Select("name,content").Order("sort desc").Find(&configs)
+	m := make(map[string]string)
+	for _, config := range configs {
+		m[config.Name] = config.Content
+	}
+	return m
+}

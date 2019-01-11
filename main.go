@@ -13,6 +13,7 @@ import (
 	"webBlog/helper"
 	"html/template"
 	"time"
+	"webBlog/middleware"
 )
 
 func main() {
@@ -33,6 +34,9 @@ func main() {
 	defer DB.Close()
 	//init user
 	createAdminUser(DB)
+	//init cache config
+	appConfig := helper.GetAppConf()
+	appConfig.Init()
 	//gin start
 	gin.SetMode(config.GetValue("app", "runMode"))
 	router := gin.Default()
@@ -58,7 +62,7 @@ func main() {
 func setRoute(r *gin.Engine){
 	adminR := r.Group("/admin")
 	//自定义admin auth中间件
-	//adminR.Use(middleware.CheckAdminLogin([]string{"/admin/login", "/admin/code"}))
+	adminR.Use(middleware.CheckAdminLogin([]string{"/admin/login", "/admin/code"}))
 	{
 		//登录
 		loginController := &admin.Login{}
