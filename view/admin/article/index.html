@@ -18,7 +18,7 @@
 <div class="result_content">
 <div class="short_wrap">
         <a href="{{"/admin/article/add"|url}}"><i class="fa fa-plus"></i>添加文章</a>
-        <a href="{{"/admin/article/index"|url}}"><i class="fa fa-recycle"></i>全部文章</a>
+        <a href="{{"/admin/article/recom"|url}}"><i class="fa fa-recycle"></i>推荐文章</a>
 </div>
 </div>
     <!--快捷导航 结束-->
@@ -34,7 +34,6 @@
         <th width="80px">推荐</th>
         <th>点击</th>
         <th>发布时间</th>
-        <th>修改时间</th>
         <th>操作</th>
     </tr>
    {{range .articles}}
@@ -49,7 +48,6 @@
 <td><a href="javascript:;" onclick="recom({{.ID}},{{.IsRecom}})">{{if .IsRecom}}是{{else}}否{{end}}</a></td>
 <td>{{.Hits}}</td>
 <td>{{dateFormat .CreatedAt "2006-01-02 15:04"}}</td>
-<td>{{dateFormat .UpdatedAt "2006-01-02 15:04"}}</td>
 <td>
         <a href="{{"/admin/article/edit"|url}}/{{.ID}}">修改</a>
         <a href="javascript:;" onclick="del({{.ID}})">删除</a>

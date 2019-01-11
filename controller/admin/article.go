@@ -130,7 +130,25 @@ func (t *Article) Del (c *gin.Context){
 }
 
 func (t *Article) ChangeOrder (c *gin.Context){
-
+	id := c.PostForm("id")
+	sort := c.PostForm("sort")
+	if id =="" || sort == "" {
+		helper.ReturnJson(c, 0, "参数错误")
+		return
+	}
+	var article model.Article
+	err := model.DB.Where("id = ?", id).First(&article).Error
+	if err != nil {
+		helper.ReturnJson(c, 0, "无该文章，设置失败")
+		return
+	}
+	sortInt, err := strconv.Atoi(sort)
+	if err != nil {
+		helper.ReturnJson(c, 0, "非法参数")
+		return
+	}
+	model.DB.Model(&article).Update("sort", sortInt)
+	helper.ReturnJson(c, 1, "设置成功")
 }
 
 func (t *Article) SetRecom (c *gin.Context){
@@ -158,10 +176,23 @@ func (t *Article) SetRecom (c *gin.Context){
 		model.DB.Model(&article).Update("is_recom", true)
 		helper.ReturnJson(c, 1, "推荐成功")
 	}
-
-
 }
 
 func (t *Article) Recom (c *gin.Context){
-
+	p := c.DefaultQuery("page", "1")
+	pnum := 10
+	pi, err := strconv.Atoi(p)
+	if err != nil {
+		pi = 1
+	}
+	pi = (pi - 1) * pnum
+	var articles []*model.Article
+	model.DB.Select("id,title,cover,is_recom,sort,created_at,updated_at").Where("is_recom = ?", 1).Offset(pi).Limit(pnum).Order("sort desc,id desc").Find(&articles)
+	var count int
+	model.DB.Model(&model.Article{}).Count(&count)
+	pagination := helper.NewPagination(c.Request, count, pnum)
+	c.HTML(http.StatusOK, "admin/article/recom.html",gin.H{
+		"articles":articles,
+		"pages":template.HTML(pagination.Pages()),
+	})
 }
