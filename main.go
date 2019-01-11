@@ -128,7 +128,6 @@ func setRoute(r *gin.Engine){
 		adminR.POST("/config/edit/:id", confController.Edit)
 		adminR.POST("/config/del/:id", confController.Del)
 		adminR.POST("/config/changeorder", confController.ChangeOrder)
-		adminR.POST("/config/putfile", confController.PutFile)
 		adminR.POST("/config/changecontent", confController.ChangeContent)
 	}
 }

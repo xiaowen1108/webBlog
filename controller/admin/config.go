@@ -159,9 +159,6 @@ func (t *Config) ChangeOrder (c *gin.Context){
 	helper.ReturnJson(c, 1, "修改成功")
 }
 
-func (t *Config) PutFile (c *gin.Context){
-
-}
 type ContentData struct {
 	Ids []string   `form:"id[]" binding:"required"`
 	Content []string `form:"content[]" binding:"required"`
