@@ -100,8 +100,10 @@ func setRoute(r *gin.Engine){
 		linkController := &admin.Link{}
 		adminR.GET("/links/index", linkController.Index)
 		adminR.GET("/links/add", linkController.Add)
+		adminR.POST("/links/add", linkController.Add)
+		adminR.GET("/links/edit/:id", linkController.Edit)
 		adminR.POST("/links/edit/:id", linkController.Edit)
-		adminR.GET("/links/del/:id", linkController.Del)
+		adminR.POST("/links/del/:id", linkController.Del)
 		adminR.POST("/links/changeorder", linkController.ChangeOrder)
 		//导航
 		navController := &admin.Nav{}

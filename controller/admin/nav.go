@@ -103,7 +103,7 @@ func (t *Nav) Del (c *gin.Context){
 	var nav model.Nav
 	err := model.DB.Where("id = ?", id).First(&nav).Error
 	if err != nil {
-		helper.ReturnJson(c, 0, "无该分类，删除失败")
+		helper.ReturnJson(c, 0, "无该导航，删除失败")
 		return
 	}
 	model.DB.Delete(&nav)
@@ -122,7 +122,7 @@ func (t *Nav) ChangeOrder (c *gin.Context){
 	var nav model.Nav
 	err := model.DB.Where("id = ?", id).First(&nav).Error
 	if err != nil {
-		helper.ReturnJson(c, 0, "无该分类，设置失败")
+		helper.ReturnJson(c, 0, "无该导航，设置失败")
 		return
 	}
 	nav.Sort, err = strconv.Atoi(sort)
