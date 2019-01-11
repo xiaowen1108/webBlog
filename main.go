@@ -89,9 +89,9 @@ func setRoute(r *gin.Engine){
 		adminR.POST("/article/add", articleController.Add)
 		adminR.GET("/article/edit/:id", articleController.Edit)
 		adminR.POST("/article/edit/:id", articleController.Edit)
-		adminR.GET("/article/del/:id", articleController.Del)
+		adminR.POST("/article/del/:id", articleController.Del)
 		adminR.POST("/article/changeorder/:id", articleController.ChangeOrder)
-		adminR.POST("/article/set_recom/:id", articleController.SetRecom)
+		adminR.POST("/article/set_recom", articleController.SetRecom)
 		adminR.GET("/article/recom", articleController.Recom)
 		//base
 		baseController := &admin.Base{}

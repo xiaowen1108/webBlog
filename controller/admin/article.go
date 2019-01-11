@@ -111,12 +111,22 @@ func (t *Article) Edit (c *gin.Context){
 		} else {
 			helper.SetFlash(c, "errorMsg", "缺少参数 ！")
 		}
-		c.Redirect(http.StatusFound, "/admin/article/eidt/"+id)
+		c.Redirect(http.StatusFound, "/admin/article/edit/"+id)
 	}
 }
 
 func (t *Article) Del (c *gin.Context){
-
+	id := c.Param("id")
+	var article model.Article
+	err := model.DB.Where("id = ?", id).First(&article).Error
+	if err != nil {
+		helper.ReturnJson(c, 0, "无该文章，删除失败")
+		return
+	}
+	model.HandelTagDel(article.Tags)
+	model.DB.Delete(&article)
+	helper.ReturnJson(c, 1, "删除成功")
+	return
 }
 
 func (t *Article) ChangeOrder (c *gin.Context){
@@ -124,6 +134,31 @@ func (t *Article) ChangeOrder (c *gin.Context){
 }
 
 func (t *Article) SetRecom (c *gin.Context){
+	id := c.PostForm("id")
+	recom := c.PostForm("recom")
+	if id =="" || recom == "" {
+		helper.ReturnJson(c, 0, "参数错误")
+		return
+	}
+	var article model.Article
+	err := model.DB.Where("id = ?", id).First(&article).Error
+	if err != nil {
+		helper.ReturnJson(c, 0, "无该文章，设置失败")
+		return
+	}
+	isRecom, err := strconv.ParseBool(recom)
+	if err != nil {
+		helper.ReturnJson(c, 0, "非法参数")
+		return
+	}
+	if isRecom {
+		model.DB.Model(&article).Update("is_recom", false)
+		helper.ReturnJson(c, 1, "取消推荐成功")
+	} else {
+		model.DB.Model(&article).Update("is_recom", true)
+		helper.ReturnJson(c, 1, "推荐成功")
+	}
+
 
 }
 

@@ -79,7 +79,7 @@ function del(id) {
 layer.confirm('确定要删除这个文章吗？', {
     btn: ['确定','取消'] //按钮
 }, function(){
-$.post(""+id,{},function (data) {
+$.post("{{"/admin/article/del"|url}}/"+id,{},function (data) {
 if(data.status==1){
     layer.msg(data.info, {icon: 6});
     setInterval(function(){window.location.reload();},2000);
@@ -94,11 +94,11 @@ function recom(id,recom){
 layer.confirm(str, {
     btn: ['确定','取消'] //按钮
 }, function(){
-$.post(""+id,{'recom':recom},function (data) {
+$.post("{{"/admin/article/set_recom"|url}}",{'id':id,'recom':recom},function (data) {
 if(data.status==1){
     layer.msg(data.info, {icon: 6});
 }else{
-layer.msg(data.info, {icon: 6});
+    layer.msg(data.info, {icon: 6});
 }
     setInterval(function(){window.location.reload();},2000);
 });

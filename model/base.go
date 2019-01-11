@@ -38,7 +38,7 @@ func InitDB(dbName string, dbConfig map[string]string) (*gorm.DB, error) {
 		//user:password@tcp(localhost:5555)/dbname?charset=xxx&collation=utf8mb4_unicode_ci&parseTime=True
 		DB, err = gorm.Open(dbName, args)
 		if err == nil {
-			//DB.LogMode(true)
+			DB.LogMode(true)
 			//AutoMigrate
 			DB.AutoMigrate(&AdminUser{}, &Article{}, &Category{}, &Config{}, &Link{}, &Nav{}, &Tag{})
 			//连接池
