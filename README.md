@@ -52,7 +52,6 @@ so,拿GO来重构下
 ```
 git clone https://github.com/xiaowen1108/webBlog.git
 cd webBlog
-go mod tiny
 go run main.go [-app_conf_file="配置文件地址"]
 ```
 
